@@ -21,7 +21,7 @@ public class PostsController {
     private List<Post> posts = Data.getPosts();
 
 
-    @GetMapping("/api/users/{id}/posts")
+    @GetMapping("/users/{userId}/posts")
     @ResponseStatus(HttpStatus.OK)
     public List<Post> showPostsByUserId(@PathVariable int userId) {
         return posts.stream()
@@ -30,7 +30,7 @@ public class PostsController {
 
     }
 
-    @PostMapping("/api/users/{id}/posts")
+    @PostMapping("/users/{userId}/posts")
     @ResponseStatus(HttpStatus.CREATED)
     public Post create(@RequestBody Post post, @PathVariable int userId) {
         post.setUserId(userId);
