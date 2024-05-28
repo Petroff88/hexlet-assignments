@@ -1,6 +1,5 @@
 package exercise;
 
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -30,16 +29,21 @@ public class Application {
 
     @Value("${user.admins.email}")
     @GetMapping("/admins")
-    public List<User> showAdmins() {
+    public List<String> showAdmins() {
         List<String> mails = adminMails.getAdmins();
         List<User> admins = List.of();
+        List<String> names;
 
         admins = users.stream()
-                .sorted(Comparator.comparing(User::getName))
                 .filter(user -> mails.contains(user.getEmail()))
-                .collect(Collectors.toList());
+                .toList();
 
-        return admins;
+        names = admins.stream()
+                .sorted(Comparator.comparing(User::getName))
+                .map(User::getName)
+                .toList();
+
+        return names;
     }
     // END
 
