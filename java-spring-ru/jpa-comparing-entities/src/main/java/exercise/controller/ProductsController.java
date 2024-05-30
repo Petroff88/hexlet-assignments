@@ -34,6 +34,7 @@ public class ProductsController {
 
     // BEGIN
     @PostMapping(path = "")
+    @ResponseStatus(HttpStatus.CREATED)
     public Product create(@RequestBody Product productData) {
         Product product = new Product();
 
