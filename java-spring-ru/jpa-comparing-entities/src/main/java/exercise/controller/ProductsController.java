@@ -33,7 +33,7 @@ public class ProductsController {
     }
 
     // BEGIN
-    @PostMapping(path = "/products")
+    @PostMapping(path = "")
     public Product create(@RequestBody Product productData) {
         Product product = new Product();
 
@@ -44,6 +44,7 @@ public class ProductsController {
 
             product.setTitle(productData.getTitle());
         product.setPrice(productData.getPrice());
+        productRepository.save(product);
 
         products.add(product);
 
