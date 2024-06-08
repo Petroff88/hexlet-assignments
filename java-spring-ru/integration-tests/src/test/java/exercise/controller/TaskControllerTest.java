@@ -68,14 +68,11 @@ class ApplicationTest {
 
     // BEGIN
     public Task setUp() throws Exception {
-        var testTask = Instancio.of(Task.class)
+        return Instancio.of(Task.class)
                 .ignore(Select.field(Task::getId))
-                .ignore(Select.field(Task::getCreatedAt))
-                .ignore(Select.field(Task::getUpdatedAt))
-                .set(Select.field(Task::getTitle), faker.lorem().word())
-                .set(Select.field(Task::getDescription), faker.lorem().paragraph())
+                .supply(Select.field(Task::getTitle), () -> faker.lorem().word())
+                .supply(Select.field(Task::getDescription), () -> faker.lorem().paragraph())
                 .create();
-        return testTask;
     }
 
 
@@ -114,8 +111,13 @@ class ApplicationTest {
 
         assertThatJson(body).and(
                 a -> a.node("title").isEqualTo(task.getTitle()),
-                a -> a.node("description").isEqualTo(task.getDescription())
-        );
+                a -> a.node("description").isEqualTo(task.getDescription()));
+
+        var actTask = taskRepository.findByTitle(task.getTitle()).get();
+
+        assertThat(actTask).isNotNull();
+        assertThat(actTask.getTitle()).isEqualTo(task.getTitle());
+        assertThat(actTask.getDescription()).isEqualTo(task.getDescription());
     }
 
     @Test
@@ -142,11 +144,13 @@ class ApplicationTest {
     @Test
     public void testDelete() throws Exception {
         var task = setUp();
-        System.out.println(task.getId());
         taskRepository.save(task);
 
         mockMvc.perform(delete("/tasks/" + task.getId()))
                 .andExpect(status().isOk());
+
+        task = taskRepository.findById(task.getId()).orElse(null);
+        assertThat(task).isNull();
     }
     // END
 }
