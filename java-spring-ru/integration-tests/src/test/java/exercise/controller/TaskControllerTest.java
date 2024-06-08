@@ -116,13 +116,6 @@ class ApplicationTest {
                 a -> a.node("title").isEqualTo(task.getTitle()),
                 a -> a.node("description").isEqualTo(task.getDescription())
         );
-
-//        Task actTask = taskRepository.findById(task.getId()).get();
-//
-//        assertThat(actTask.getTitle()).isEqualTo(task.getTitle());
-//        assertThat(actTask.getDescription()).isEqualTo(task.getDescription());
-//
-//        taskRepository.deleteById(actTask.getId());
     }
 
     @Test
@@ -155,8 +148,6 @@ class ApplicationTest {
         mockMvc.perform(delete("/tasks/" + task.getId()))
                 .andExpect(status().isOk());
     }
-
-
     // END
 }
 
