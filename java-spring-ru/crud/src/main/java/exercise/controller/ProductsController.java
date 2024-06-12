@@ -2,15 +2,14 @@ package exercise.controller;
 
 import java.util.List;
 
-import exercise.dto.CategoryDTO;
 import exercise.dto.ProductCreateDTO;
 import exercise.dto.ProductDTO;
 import exercise.dto.ProductUpdateDTO;
-import exercise.exception.ResourceBadRequestException;
 import exercise.mapper.ProductMapper;
 import exercise.model.Category;
 import exercise.model.Product;
 import exercise.repository.CategoryRepository;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -40,7 +39,7 @@ public class ProductsController {
     private CategoryRepository categoryRepository;
 
     // BEGIN
-//    GET /products – просмотр списка всех товаров
+
     @GetMapping(path = "")
     public List<ProductDTO> index() {
         var products = productRepository.findAll();
@@ -59,17 +58,16 @@ public class ProductsController {
         return productDTO;
     }
 
-    //    POST /products – добавление нового товара. При указании id несуществующей категории должен вернуться ответ с кодом 400 Bad request
-    @PostMapping("")
+    @PostMapping(path = "")
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductDTO create(@RequestBody ProductCreateDTO data) {
-        var product = productMapper.map(data);
-        var cat = getCategory(data.getCategoryId());
+    ProductDTO create(@Valid @RequestBody ProductCreateDTO productData) {
+        var product = productMapper.map(productData);
+        var category = getCategory(productData.getCategoryId());
 
-        product.setCategory(cat);
+        product.setCategory(category);
         productRepository.save(product);
 
-        return (productMapper.map(product));
+        return productMapper.map(product);
     }
 
     @PutMapping("/{id}")
@@ -95,7 +93,7 @@ public class ProductsController {
 
     private Category getCategory(Long categoryID) {
         return categoryRepository.findById(categoryID).orElseThrow(
-                () -> new ResourceBadRequestException("Category not found")
+                () -> new ConstraintViolationException(null)
         );
     }
 
