@@ -10,10 +10,11 @@ import org.springframework.stereotype.Service;
 
 // BEGIN
 @Service
-public class CustomUserDetailsService implements UserDetailsManager {
+public class CustomUserDetailsService implements UserDetailsManager{
 
     @Autowired
     private UserRepository userRepository;
+
 
     @Override
     public void createUser(UserDetails user) {
@@ -45,6 +46,5 @@ public class CustomUserDetailsService implements UserDetailsManager {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
-
 }
 // END
