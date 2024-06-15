@@ -54,13 +54,13 @@ public class AuthorsController {
         return authorDto;
     }
 
-    @PutMapping("{/id}")
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public AuthorDTO update(@RequestBody @Valid AuthorUpdateDTO dto, @PathVariable Long id) {
         return authorService.update(dto, id);
     }
 
-    @DeleteMapping("{/id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id){
         authorService.delete(id);
